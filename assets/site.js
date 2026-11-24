@@ -10,6 +10,7 @@
   const initial = new URL(location.href);
   const oldGroup = initial.searchParams.get("group");
   for (const oldKey of ["group", "family", "list", "q"]) initial.searchParams.delete(oldKey);
+  if (initial.hash === "#recruiter-qr") initial.hash = "recruitment-contact";
   if (initial.hash === "#apply") initial.hash = "jobs";
   if (!initial.hash || initial.hash === "#jobs") {
     if (oldGroup === "tech" || oldGroup === "business") initial.hash = "jobs-" + oldGroup;
@@ -69,6 +70,12 @@
 
   const tabGroups = Array.from(document.querySelectorAll(".catalog-tabs"), setupTabs);
   function readLocation(alignMigrated = false) {
+    if (location.hash === "#recruiter-qr") {
+      const url = new URL(location.href);
+      url.hash = "recruitment-contact";
+      updateUrl("replaceState", url);
+      alignMigrated = true;
+    }
     const target = document.getElementById(location.hash.slice(1));
     if (!target) return;
     tabGroups.forEach(selectFor => selectFor(target));
